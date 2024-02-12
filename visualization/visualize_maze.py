@@ -8,17 +8,18 @@ def visualize_maze(maze):
 
     Args:
         maze (np.array): A 2D numpy array representing the maze.
+
+    returns:
+       shiws the maze grid
     """
+    maze_mapping = {".": 0, "X": 1, "S": 2, "G": 3}
+    numeric_maze = np.array([[maze_mapping[char] for char in row] for row in maze])
+
     fig, ax = plt.subplots()
-    ax.imshow(maze, cmap=plt.cm.Dark2)
-    ax.grid(which="major", axis="both", linestyle="-", color="k", linewidth=2)
-    ax.set_xticks(np.arange(-0.5, maze.shape[1], 1))
-    ax.set_yticks(np.arange(-0.5, maze.shape[0], 1))
-
-    # Label start and goal
-    start = np.where(maze == "S")
-    goal = np.where(maze == "G")
-    ax.text(start[1], start[0], "S", va="center", ha="center", color="white")
-    ax.text(goal[1], goal[0], "G", va="center", ha="center", color="white")
-
+    cax = ax.imshow(
+        numeric_maze, cmap=plt.cm.Dark2
+    )  # Choose a colormap that differentiates the elements clearly
+    plt.colorbar(
+        cax, ticks=range(len(maze_mapping))
+    )  # Optional: Add a colorbar for reference
     plt.show()

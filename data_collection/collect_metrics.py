@@ -4,6 +4,7 @@ from algorithms.dfs import dfs_search
 from algorithms.bfs import bfs_search
 from algorithms.a_star import a_star_search
 from utils.maze_generation import generate_maze
+from visualization.visualize_maze import visualize_maze
 
 
 def run_search_algorithms(runs=10, size=10, density=0.2):
@@ -22,6 +23,7 @@ def run_search_algorithms(runs=10, size=10, density=0.2):
             execution_time = time.time() - start_time
             status = "Pass" if solution else "Fail"
             solution_path_length = len(solution) if solution else 0
+            visualize_maze(maze)
 
             results.append(
                 {
