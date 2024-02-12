@@ -25,7 +25,10 @@ maze_search_project/
 │
 ├── utils/
 │   ├── __init__.py
-│   └── maze_generation.py
+│   ├── maze_generation.py
+│   ├── node.py
+│   └── search_utils.py
+│
 │
 └── main.py
 
