@@ -1,3 +1,6 @@
+from itertools import count
+
+
 class Node:
     """
     A class to represent a node in a search space for maze navigation.
