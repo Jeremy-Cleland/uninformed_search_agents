@@ -1,7 +1,13 @@
 # utils/search_utils.py
 
+
 def get_successors(maze, state):
-    directions = [('UP', (0, -1)), ('DOWN', (0, 1)), ('LEFT', (-1, 0)), ('RIGHT', (1, 0))]
+    directions = [
+        ("UP", (0, -1)),
+        ("DOWN", (0, 1)),
+        ("LEFT", (-1, 0)),
+        ("RIGHT", (1, 0)),
+    ]
     successors = []
     for action, (dx, dy) in directions:
         next_state = (state[0] + dx, state[1] + dy)
@@ -9,9 +15,10 @@ def get_successors(maze, state):
             successors.append((action, next_state))
     return successors
 
+
 def is_valid(maze, state):
     x, y = state
-    return 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] != 'X'
+    return 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] != "X"
 
 
 def find_positions(maze, symbol):
