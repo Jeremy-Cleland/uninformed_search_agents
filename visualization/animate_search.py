@@ -6,7 +6,9 @@ from matplotlib.animation import FFMpegWriter
 plt.rcParams["animation.ffmpeg_path"] = "/opt/homebrew/bin/ffmpeg"
 
 
-def animate_search_process(steps, save_animation=True, filename="search_animation.mp4"):
+def animate_search_process(
+    steps, algorithm, save_animation=True, filename="search_animation.mp4"
+):
     """
     Animate the search process on a grid.
 
@@ -74,7 +76,7 @@ def animate_search_process(steps, save_animation=True, filename="search_animatio
         numeric_state = np.vectorize(marking_to_numeric_value)(steps[frame])
         ax.clear()
         ax.imshow(numeric_state, cmap=plt.cm.Dark2, interpolation="nearest")
-        ax.set_title(f"Step: {frame + 1}")
+        ax.set_title(f"Algo:{algorithm}Step: {frame + 1}")
         ax.set_xticks([])
         ax.set_yticks([])
 

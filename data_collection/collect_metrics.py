@@ -12,9 +12,7 @@ from visualization.animate_search import (
 output_folder = "search_videos"
 
 
-def run_search_algorithms(
-    runs=10, size=10, density=0.2, visualize=True, save_animation=True
-):
+def run_search_algorithms(runs, size, density, visualize, save_animation):
     """
     Runs multiple search algorithms on randomly generated mazes and returns the results as a pandas DataFrame.
 
@@ -57,7 +55,10 @@ def run_search_algorithms(
             if visualize:
                 animation_filename = f"{name}_search_animation_run_{run_number}.mp4"
                 animate_search_process(
-                    steps, save_animation=False, filename=animation_filename
+                    steps,
+                    name,
+                    save_animation=False,
+                    filename=animation_filename,
                 )
 
             if visualize and save_animation:
@@ -67,7 +68,9 @@ def run_search_algorithms(
                 )
 
                 # Call the function to animate and save the search process
-                animate_search_process(steps, save_animation=True, filename=filename)
+                animate_search_process(
+                    steps, algorithm, save_animation=True, filename=filename
+                )
 
             results.append(
                 {
@@ -83,22 +86,12 @@ def run_search_algorithms(
     return pd.DataFrame(results)
 
 
+import pandas as pd
+
+
 def summarize_results(results_df):
-    """
-    Summarizes the results of the search algorithms by calculating the average metrics for each algorithm.
-
-    Parameters
-    ----------
-    results_df : pd.DataFrame
-        A DataFrame containing the results of the search algorithms.
-
-    Returns
-    -------
-    pd.DataFrame
-        A DataFrame containing the summarized results.
-
-    """
-    summary = (
+    # Calculate average metrics for each algorithm
+    summary_avg = (
         results_df.groupby("Algorithm")
         .agg(
             {
@@ -110,6 +103,48 @@ def summarize_results(results_df):
         .reset_index()
     )
 
-    summary["Run"] = "Average"
-    summary["Status"] = "-"
-    return pd.concat([results_df, summary], ignore_index=True)
+    # Calculate total fails for each algorithm
+    fails_summary = (
+        results_df[results_df["Status"] == "Fail"]
+        .groupby("Algorithm")
+        .size()
+        .reset_index(name="Total Fails")
+    )
+
+    # Merge average metrics with total fails
+    summary = pd.merge(summary_avg, fails_summary, on="Algorithm", how="left")
+    summary["Total Fails"] = summary["Total Fails"].fillna(
+        0
+    )  # Replace NaNs with 0 for algorithms with no fails
+
+    # Append the summary to the original results DataFrame
+    final_results = pd.concat([results_df, summary], ignore_index=True, sort=False)
+
+    # Correctly handle the dtype warning by explicitly converting "Run" to object type if necessary
+    if final_results["Run"].dtype != "object":
+        final_results["Run"] = final_results["Run"].astype("object")
+    final_results.loc[final_results["Run"].isnull(), "Run"] = "Average"
+
+    # Handle inplace operation warning by directly assigning the filled values
+    final_results["Status"] = final_results["Status"].fillna("-")
+
+    return final_results
+
+
+def save_results_to_csv(results_df, filename="search_results.csv"):
+    """
+    Saves the summarized results of the search algorithms to a CSV file.
+
+    Parameters
+    ----------
+    results_df : pd.DataFrame
+        The DataFrame containing the summarized results.
+    filename : str, optional
+        The filename for the CSV file.
+    """
+    results_df.to_csv(filename, index=False)
+    print(f"Results saved to {filename}")
+
+
+# Example usage:
+# Assuming results_df is the DataFrame returned by your search algorithm runs

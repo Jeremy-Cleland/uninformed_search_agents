@@ -1,4 +1,8 @@
-from data_collection.collect_metrics import run_search_algorithms, summarize_results
+from data_collection.collect_metrics import (
+    run_search_algorithms,
+    summarize_results,
+    save_results_to_csv,
+)
 
 
 def main():
@@ -17,9 +21,11 @@ def main():
     main()
     """
     results_df = run_search_algorithms(
-        runs=10, size=10, density=0.2, visualize=True, save_animation=True
+        runs=10, size=10, density=0.2, visualize=False, save_animation=True
     )
     final_report = summarize_results(results_df)
+    summarized_results = summarize_results(results_df)
+    save_results_to_csv(summarized_results, "search_results.csv")
     print(final_report)
 
 
