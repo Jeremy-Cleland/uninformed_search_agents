@@ -1,3 +1,9 @@
+"""
+Necessary imports:
+- random
+- numpy as np
+"""
+
 import random
 import numpy as np
 
@@ -14,16 +20,16 @@ def generate_maze(size=10, density=0.2):
     - np.array: A 2D numpy array representing the maze, where '.' denotes open cells,
       'X' denotes obstacles, 'S' denotes the start, and 'G' denotes the goal.
     """
-    # Create an empty maze with all open cells
+    # Create an empty maze
     maze = np.full((size, size), ".")
 
-    # Randomly fill the maze with obstacles based on the specified density
+    # Randomly place obstacles in the maze
     for row in range(size):
         for col in range(size):
             if random.random() < density:
                 maze[row, col] = "X"
 
-    # Ensure start and goal positions are not blocked and not the same
+    # Randomly place the start and goal positions
     start, goal = (0, 0), (size - 1, size - 1)
     while start == goal or maze[start] == "X" or maze[goal] == "X":
         start = (random.randint(0, size - 1), random.randint(0, size - 1))
@@ -35,6 +41,5 @@ def generate_maze(size=10, density=0.2):
     return maze
 
 
-# Example usage
 maze = generate_maze()
 print(maze)

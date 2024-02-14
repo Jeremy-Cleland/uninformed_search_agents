@@ -71,7 +71,7 @@ def animate_search_process(
 
     def update(frame):
         def marking_to_numeric_value(key):
-            return marking_to_numeric.get(key, 0)  # Default to 0 for unmapped keys
+            return marking_to_numeric.get(key, 0)
 
         numeric_state = np.vectorize(marking_to_numeric_value)(steps[frame])
         ax.clear()

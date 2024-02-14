@@ -1,3 +1,12 @@
+"""
+This module contains utility functions for searching algorithms.
+The `get_successors` function returns the valid successors of a given state in a maze.
+The `is_valid` function checks if a given state is valid in a maze.
+The `find_positions` function finds the positions of a given symbol in a maze.
+The `reconstruct_path` function reconstructs the path from a given node to the starting node.
+"""
+
+
 def get_successors(maze, state):
     """
     Return the valid successors of a given state in a maze.
@@ -8,18 +17,6 @@ def get_successors(maze, state):
 
     Returns:
     - successors (list of tuples): A list of valid successors, where each successor is represented as a tuple of an action and the next state.
-
-    Example:
-    >>> maze = [
-    ...     [" ", " ", " ", " ", " "],
-    ...     [" ", "X", "X", " ", " "],
-    ...     [" ", " ", " ", "X", " "],
-    ...     [" ", "X", " ", " ", " "],
-    ...     [" ", " ", " ", " ", " "]
-    ... ]
-    >>> state = (2, 2)
-    >>> get_successors(maze, state)
-    [("UP", (1, 2)), ("DOWN", (3, 2)), ("LEFT", (2, 1)), ("RIGHT", (2, 3))]
 
     Note:
     - The maze is represented as a 2D list, where each element represents a cell in the maze.
@@ -113,14 +110,10 @@ def reconstruct_path(node):
 
     Returns:
         list: The reconstructed path as a list of states, starting from the beginning.
-
-    Example:
-        >>> node = Node(state=3, parent=Node(state=2, parent=Node(state=1, parent=None)))
-        >>> reconstruct_path(node)
-        [1, 2, 3]
     """
     path = []
     while node:
         path.append(node.state)
         node = node.parent
-    return path[::-1]  # Reverse the path to start from the beginning
+    # Reverse the path to start from the beginning
+    return path[::-1]

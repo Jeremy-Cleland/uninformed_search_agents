@@ -1,3 +1,15 @@
+"""
+Ipoort the necessary libraries and modules
+time - This module provides various time-related functions.
+os - This module provides a way of using operating system dependent functionality.
+pandas - This module provides data structures and data analysis tools.
+dfs_search - This module contains the implementation of the depth-first search algorithm.
+bfs_search - This module contains the implementation of the breadth-first search algorithm.
+a_star_search - This module contains the implementation of the A* search algorithm.
+generate_maze - This module contains the function to generate a random maze.
+animate_search_process - This module contains the function to visualize the search process.
+"""
+
 import time
 import os
 import pandas as pd
@@ -7,9 +19,9 @@ from algorithms.a_star import a_star_search
 from utils.maze_generation import generate_maze
 from visualization.animate_search import (
     animate_search_process,
-)  # Ensure this import is correct
+)
 
-output_folder = "search_videos"
+OUTPUT_FOLDER = "search_videos"
 
 
 def run_search_algorithms(runs, size, density, visualize, save_animation):
@@ -34,7 +46,9 @@ def run_search_algorithms(runs, size, density, visualize, save_animation):
     results = run_search_algorithms(runs=5, size=20, density=0.3, visualize=True, save_animation=True)
     print(results)
     """
+    # Create an empty list to store the results
     results = []
+
     for run_number in range(1, runs + 1):
         maze = generate_maze(size, density)
 
@@ -43,7 +57,7 @@ def run_search_algorithms(runs, size, density, visualize, save_animation):
             "BFS": bfs_search,
             "A*": a_star_search,
         }
-
+        # Run each algorithm and measure the execution time
         for name, algorithm in algorithms.items():
             start_time = time.time()
             solution, nodes_expanded, steps = algorithm(maze)
@@ -52,6 +66,7 @@ def run_search_algorithms(runs, size, density, visualize, save_animation):
             solution_path_length = len(solution) if solution else 0
             solution, nodes_expanded, steps = algorithm(maze)
 
+            # Visualize the search process
             if visualize:
                 animation_filename = f"{name}_search_animation_run_{run_number}.mp4"
                 animate_search_process(
@@ -60,14 +75,13 @@ def run_search_algorithms(runs, size, density, visualize, save_animation):
                     save_animation=False,
                     filename=animation_filename,
                 )
-
+            # Save the animation if the save_animation flag is set to True
             if visualize and save_animation:
-                # Construct the filename including the path to the output folder
                 filename = os.path.join(
-                    output_folder, f"{name}_search_run_{run_number}.mp4"
+                    OUTPUT_FOLDER, f"{name}_search_run_{run_number}.mp4"
                 )
 
-                # Call the function to animate and save the search process
+                # Create the output folder if it does not exist
                 animate_search_process(
                     steps, algorithm, save_animation=True, filename=filename
                 )
@@ -86,10 +100,24 @@ def run_search_algorithms(runs, size, density, visualize, save_animation):
     return pd.DataFrame(results)
 
 
-import pandas as pd
-
-
 def summarize_results(results_df):
+    """
+    Summarizes the results of the search algorithms by calculating the average metrics for each algorithm and the total number of fails.
+
+    Parameters:
+    - results_df (pd.DataFrame): A DataFrame containing the results of each run and algorithm, including the run number, algorithm name, solution path length, number of nodes expanded, execution time, and status.
+
+    Returns:
+    - pd.DataFrame: A DataFrame containing the summarized results, including the average metrics for each algorithm and the total number of fails.
+
+    The 'summarize_results' function takes a DataFrame of search algorithm results as input and calculates the average metrics for each algorithm, including the solution path length, number of nodes expanded, and execution time. It also calculates the total number of fails for each algorithm. The function returns a DataFrame containing the summarized results.
+
+    The function first groups the results DataFrame by the algorithm name and calculates the mean solution path length, mean number of nodes expanded, and mean execution time for each algorithm. It then groups the results DataFrame by the algorithm name and counts the total number of fails for each algorithm. The average metrics and total fails are merged into a single DataFrame, and the function returns the summarized results.
+
+    Example usage:
+    summarized_results = summarize_results(results_df)
+    print(summarized_results)
+    """
     # Calculate average metrics for each algorithm
     summary_avg = (
         results_df.groupby("Algorithm")
@@ -120,12 +148,12 @@ def summarize_results(results_df):
     # Append the summary to the original results DataFrame
     final_results = pd.concat([results_df, summary], ignore_index=True, sort=False)
 
-    # Correctly handle the dtype warning by explicitly converting "Run" to object type if necessary
+    # Convert "Run" column to object type and fill NaNs in "Status" column
     if final_results["Run"].dtype != "object":
         final_results["Run"] = final_results["Run"].astype("object")
     final_results.loc[final_results["Run"].isnull(), "Run"] = "Average"
 
-    # Handle inplace operation warning by directly assigning the filled values
+    # Fill NaNs in "Status" column with "-"
     final_results["Status"] = final_results["Status"].fillna("-")
 
     return final_results
@@ -144,7 +172,3 @@ def save_results_to_csv(results_df, filename="search_results.csv"):
     """
     results_df.to_csv(filename, index=False)
     print(f"Results saved to {filename}")
-
-
-# Example usage:
-# Assuming results_df is the DataFrame returned by your search algorithm runs

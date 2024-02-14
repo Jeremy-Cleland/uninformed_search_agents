@@ -21,7 +21,7 @@ def main():
     main()
     """
     results_df = run_search_algorithms(
-        runs=10, size=10, density=0.2, visualize=False, save_animation=True
+        runs=10, size=10, density=0.2, visualize=True, save_animation=True
     )
     final_report = summarize_results(results_df)
     summarized_results = summarize_results(results_df)
