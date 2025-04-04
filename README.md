@@ -5,7 +5,7 @@
 This project implements and compares three fundamental search algorithms - Depth-First Search (DFS), Breadth-First Search (BFS), and A* Search - in navigating and solving mazes. The objective is to analyze the algorithms' performance across various metrics, including solution path length, nodes expanded, and execution time, within procedurally generated mazes. This comparison aims to provide insights into each algorithm's efficiency and suitability for maze navigation tasks.
 
 ## Project Structure
-
+````
 maze_search_project/
 │
 ├── algorithms/
@@ -31,7 +31,7 @@ maze_search_project/
 │
 │
 └── main.py
-
+```
 
 ## Features
 
